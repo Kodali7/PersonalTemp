@@ -12,7 +12,6 @@ body, head{
     display: flex;
     justify-content: left;
     align-items: center;
-    padding-left: 5%;
 }
 
 #generateHere{
@@ -44,7 +43,6 @@ body, head{
 .bottom-left{
     display: flex;
     justify-content: left;
-    padding-left: 5%;
 }
 #refresh-button, #change-button{
     background-color: #FFAB91;
@@ -74,8 +72,7 @@ body, head{
     justify-content: left; 
     align-items: center;   
     margin-top: 4vh;
-    width: 35%; 
-    padding-left: 5%;
+    width: auto; 
 }
 
 #description {
@@ -90,4 +87,41 @@ body, head{
     display:flex;
     justify-content: space-between;
     align-items: center;
+}
+.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+.left-side{
+    padding-left: 7%;
+    width: 33%;
+}
+.right-side{
+    padding-right: 7%;
+    width:45%;
+}
+.email{
+    background-color: #FAFAFF;
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    flex-direction:column;
+}
+.email-options{
+    background-color: #646F78;
+    height: 10%;
+}
+.email-body{
+    background-color: #FAFAFF;
+}
+#back-button{
+    width:15%;
+    height:100%;
+}
+#back-image{
+    height: 100%;
+    width: auto;
 }

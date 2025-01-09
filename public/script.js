@@ -21,3 +21,11 @@ function changeEmail() {
   console.log(email);
   emailOld.value = email;
 }
+
+function goBack(){
+
+}
+
+function getEmails(){
+  
+}

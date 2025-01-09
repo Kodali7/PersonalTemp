@@ -1,41 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="style.css">
-        <title>PersonalTemp</title>
-    </head>
-    <body>
-        <h1 id="title">PersonalTemp</h1><br><br>
-        <div class="middle-left">
-            <input id="generateHere" size="40vh" placeholder="Email" type="text" readonly />
-            <button id="button1" onclick="copyClick()">
-                <img id="copy-image" src="../assets/copy-image.png" alt="copy-image">
-            </button>
-        </div><br><br><br>
-        <div class="bottom-left">
-            <button id="refresh-button" onclick="refresh()">
-                <img id="refresh-image" src="../assets/refresh-image.png" alt="refresh-image">
-                Refresh</button>
-            <button id="change-button" onclick="changeEmail()">
-                <img id="change-image" src="../assets/change-image.png">
-                Change</button>
-        </div>
-        <div class="description">
-            <p id="description">
-                Keep your inbox organized and free from unwanted messages. Our service provides a temporary, secure, and anonymous email
-                address for quick, hassle-free communication. Protect your privacy while keeping your real email safe from spam.
-                However, please avoid using temporary email addresses for important events, sensitive communications, etc as they are not intended for long-term use. 
-                Always use a permanent, secure email for critical matters.
-            </p>
-        </div>
-        <div class="email">
-            <div class="email-options">
-            </div>
-            <div class="email-main">
 
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <title>PersonalTemp</title>
+</head>
+
+<body>
+    <h1 id="title">PersonalTemp</h1><br><br>
+    <div class="container">
+        <div class="left-side">
+            <div class="middle-left">
+                <input id="generateHere" size="40vh" placeholder="Email" type="text" readonly />
+                <button id="button1" onclick="copyClick()">
+                    <img id="copy-image" src="../assets/copy-image.png" alt="copy-image">
+                </button>
+            </div><br><br><br>
+            <div class="bottom-left">
+                <button id="refresh-button" onclick="refresh()">
+                    <img id="refresh-image" src="../assets/refresh-image.png" alt="refresh-image">
+                    Refresh</button>
+                <button id="change-button" onclick="changeEmail()">
+                    <img id="change-image" src="../assets/change-image.png">
+                    Change</button>
+            </div>
+            <div class="description">
+                <p id="description">
+                    Keep your inbox organized and free from unwanted messages. Our service provides a temporary, secure,
+                    and anonymous email
+                    address for quick, hassle-free communication. Protect your privacy while keeping your real email
+                    safe from spam.
+                    However, please avoid using temporary email addresses for important events, sensitive
+                    communications, etc as they are not intended for long-term use.
+                    Always use a permanent, secure email for critical matters.
+                </p>
             </div>
         </div>
-        <script src="script.js"></script>
-    </body>
+        <div class="right-side">
+            <div class="email">
+                <div class="email-options">
+                    <button id="back-button" onclick="goBack()">
+                        <img id="back-image" src="../assets/back-button.png">
+                    </button>
+                </div>
+                <div class="email-main">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
 </html>
