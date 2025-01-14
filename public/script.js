@@ -1,4 +1,4 @@
-const intervalTime = setInterval(getEmails, 5000); //calls get emails function every 5 seconds
+// const intervalTime = setInterval(getEmails, 5000); //calls get emails function every 5 seconds
 
 function copyClick() {
   let email = document.getElementById("generateHere");
@@ -18,10 +18,23 @@ function changeEmail() {
   for (let i = 0; i < length; i++) {
     email += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
-  email += "@gmail.com"; //domain at the end
+  email += "@mailslurp.biz"; //domain at the end
   let emailOld = document.getElementById("generateHere");
-  console.log(email);
+  console.log(`Fronted: ${email}`);
   emailOld.value = email;
+  fetch("/email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email: email }),
+  })
+    .then((response) => {
+      console.log(`Response: ${response}`);
+      return response;
+    })
+    .then((data) => console.log("Email sent:", data))
+    .catch((error) => console.error("Error:", error));
 }
 
 function goBack(){
@@ -33,6 +46,11 @@ async function getData(){
   const parse = await data.json();
   console.log("I am ", parse.data);
   return parse.data;
+}
+
+async function backEmails(){
+  const emails = await fetch("http://localhost:5500/emails");
+  console.log(`Emails: ${emails}`);
 }
 
 async function getEmails(){
