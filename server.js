@@ -22,8 +22,16 @@ app.post('/email', async (req, res) => { //getting email from frontend/client
 });
 
 app.get('/emails', async (req,res) => {
-  const emails = await mailslurp.getAllEmails(inbox.id); //all emails
-  res.json({data:emails});
+  try{
+  const emails = await mailslurp.getEmails(
+    "4546895f-493a-49c2-a4bf-dfe4ab941f0f",
+    undefined
+  ); //all emails erorr in this retrieveing 
+  console.log(`Email:`, emails);
+  res.json({ data: emails });
+  } catch(error){
+    console.log("ERROR in server ", error.message);
+  }
 })
 
 app.get("/", (req, res) => { //to start server with html
