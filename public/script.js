@@ -61,11 +61,25 @@ async function getEmails(){
   const body = document.querySelector('.email-main'); //this is what we are updating
   let block;
   for (const x of data){
-    block = createsEmail(x); //we need data here ; fetch request to
-    body.prepend(block); //put the email at top instead of behind
+    try{
+      const response = await fetch("/other-data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: x }),
+    });
+      console.log("Email Contents: ", response);
+      let other_data = await response.json();
+      console.log("OtherData: ", other_data.data);
+      block = createsEmail(x, other_data); //we need data here ; fetch request to
+      body.prepend(block); //put the email at top instead of behind
+    }catch(error) {
+      console.log("Error Response: ", error.message);
+    }
   }
 }
-function createsEmail(data) {
+function createsEmail(data, other_data) {
   // data will be the payload that API returns
   const card = document.createElement("div"); // create a card
   card.classList.add("email-card"); // Add a class for styling
@@ -125,8 +139,9 @@ function createsEmail(data) {
   card.addEventListener("mouseover", function () {
     card.style.cursor = "pointer"; 
   });
+
   card.addEventListener("click", function() {
-    clickEmail(data);
+    clickEmail(other_data.data);
   })
   return card;
 }
@@ -152,21 +167,40 @@ function formatTime(dateString) {
 }
 
 async function clickEmail(data){
-  try{
-    const other_data = await mailslurp.getEmail(data.emailId);
-    const body = document.querySelector('.email-main'); //main body
-    body.innerHTML = `
-      <div class="topSubject">
-        <h3 id="topSubject">${data.subject}</span>
-      </div>
-      <div class="body">
-        <p id="body">${other_data.body}</p> 
-      </div>
-      <div class="attachments">
+  const body = document.querySelector('.email-main'); //main body
+  const response = await fetch("/get-attachments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ attachments: data.attachments }),
+  });
+  console.log(await response.json());
+  // if (response.attachments.length){
+  //   const decode_response = await response.blob(); //url object and need to create an object/blob url
+  //   console.log(decode_response);
+  //   const img = document.createElement("img"); //create a image
+  //   img.src = URL.createObjectURL(decode_response);
+  //   console.log(img);
+  //   document.getElementById("image-container").appendChild(img); //need to later edit src attribute
+  //   console.log("Decode response: ", await decode_response.images);
+  // }
+  // else{
+  //   return [];
+  // }
+  // body.innerHTML = `
+  //   <div class="topSubject">
+  //     <h3 id="topSubject">${data.subject}</span>
+  //   </div>
+  //   <div class="body">
+  //     <p id="body">${data.body}</p> 
+  //   </div>
+  //   <div class="attachments">
 
-      </div>
-    `; //need to fix the body thing by using email instead of email preview so one post and one get 
-  }catch(error){
-    console.log("Error Email: ", error.message);
-  }
+  //   </div>
+  // `; //need to fix the body thing by using email instead of email preview so one post and one get 
 }
+
+//using set timeout to make code wait before running (10s)
+//optimize api/encoding blob/base64 do that in backend hopefully *
+//creating url in backend and serving when needed
