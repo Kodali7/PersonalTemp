@@ -1,7 +1,13 @@
-var express = require("express");
-var axios = require("axios");
-require("dotenv").config();
-const MailSlurp = require("mailslurp-client").default;
+// var express = require("express");
+// var axios = require("axios");
+// require("dotenv").config();
+// const MailSlurp = require("mailslurp-client").default;
+import express from "express";
+import axios from "axios";
+import dotenv from "dotenv";
+import {MailSlurp} from "mailslurp-client";
+dotenv.config();
+import { fileTypeFromBuffer } from "file-type";
 const apiKey = process.env.API_KEY;
 
 const mailslurp = new MailSlurp({ apiKey }); //created a client with mailslurp and our api
@@ -27,7 +33,7 @@ app.post("/email", async (req, res) => {
 app.get("/emails", async (req, res) => {
   try {
     const emails = await mailslurp.getEmails(
-      "4546895f-493a-49c2-a4bf-dfe4ab941f0f",
+      "5955b169-6863-4b86-a982-246ab11844c5",
       undefined
     ); //all emails erorr in this retrieveing
     console.log(`Email:`, emails);
@@ -52,19 +58,20 @@ app.post("/other-data", async (req, res) => {
 app.post("/get-attachments", async (req, res) => {
   try {
     let attachments = req.body.attachments;
-    console.log("Attachments: ", req.body.attachments);
-    let image_array = []; //figure out how to pass images ; USE downloadattachmentdto? or downloadattachmentasbase64and decode string?
+    let image_array = [];
     for (const x of attachments) {
-      console.log("PARAMTER: ", x);
       let coded =
         await mailslurp.attachmentController.downloadAttachmentAsBase64Encoded({
           attachmentId: x,
-        }); //returns DTO with contents, type, bytes
-      image_array.push({
-        base64: coded.base64FileContents,
-        contentType: coded.contentType,
-        fileSize: coded.sizeBytes,
-      });
+        });
+      // const byteArray = new Uint8Array(coded);
+      const byteArray = Buffer.from(coded.base64FileContents, 'base64');
+      console.log("Cont: ", byteArray);
+      const file = await fileTypeFromBuffer(byteArray);
+      console.log("File: ", file);
+      const blob = new Blob([byteArray], { type: file.mime }); //make a blob
+      const blobURL = URL.createObjectURL(blob);
+      image_array.push(blobURL); //binary data
     }
     res.json({ images: image_array });
   } catch (error) {
@@ -77,14 +84,14 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/data", (req, res) => {
-  //figure out a way to make api data into arrays with objects
-  data = {
-    sender: "bob",
-    time: "1000",
-  };
-  res.json({ data: data }); //find out where this goes
-});
+// app.get("/data", (req, res) => {
+//   //figure out a way to make api data into arrays with objects
+//   data = {
+//     sender: "bob",
+//     time: "1000",
+//   };
+//   res.json({ data: data }); //find out where this goes
+// });
 const port = 5500;
 app.listen(port, () => {
   console.log("Server running");

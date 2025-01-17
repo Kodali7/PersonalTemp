@@ -1,5 +1,5 @@
 //const intervalTime = setInterval(refresh, 5000); //calls get emails function every 5 seconds
-
+// Your other JavaScript functions and code can follow here
 function copyClick() {
   let email = document.getElementById("generateHere");
   email.select();
@@ -141,7 +141,7 @@ function createsEmail(data, other_data) {
   });
 
   card.addEventListener("click", function() {
-    clickEmail(other_data.data);
+    clickEmailReal(other_data.data);
   })
   return card;
 }
@@ -167,38 +167,61 @@ function formatTime(dateString) {
 }
 
 async function clickEmail(data){
-  const body = document.querySelector('.email-main'); //main body
-  const response = await fetch("/get-attachments", {
+  console.log("DATA: ", data);
+  try{
+    const response = await fetch("/get-attachments", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ attachments: data.attachments }),
   });
-  console.log(await response.json());
-  // if (response.attachments.length){
-  //   const decode_response = await response.blob(); //url object and need to create an object/blob url
-  //   console.log(decode_response);
-  //   const img = document.createElement("img"); //create a image
-  //   img.src = URL.createObjectURL(decode_response);
-  //   console.log(img);
-  //   document.getElementById("image-container").appendChild(img); //need to later edit src attribute
-  //   console.log("Decode response: ", await decode_response.images);
-  // }
-  // else{
-  //   return [];
-  // }
-  // body.innerHTML = `
-  //   <div class="topSubject">
-  //     <h3 id="topSubject">${data.subject}</span>
-  //   </div>
-  //   <div class="body">
-  //     <p id="body">${data.body}</p> 
-  //   </div>
-  //   <div class="attachments">
+    const response_new = await response.json();
+    console.log("NEW: ", response_new);
+    return response_new.images;
+  }catch(error){
+    console.log("fetch response: ", error.message);
+  }
+  // console.log("Image in array: ", image);
+  //     const blobURL = URL.createObjectURL(image);
+  //     const img = document.createElement("img");
+  //     img.src = blobURL; //server url to source
+  //     document.body.appendChild(img);
+}
 
-  //   </div>
-  // `; //need to fix the body thing by using email instead of email preview so one post and one get 
+async function clickEmailReal(data){
+  const body = document.querySelector(".email-main"); //main body
+  body.innerHTML = `
+    <div class="topSubject">
+      <h3 id="topSubject">${data.subject}</span>
+    </div>
+    <div class="body">
+      <p id="body">${data.body}</p> 
+    </div>
+  `; //need to fix the body thing by using email instead of email preview so one post and one get
+  console.log("IN REAL");
+  try {
+    let response = await clickEmail(data);
+    let another_array = []; //need to encode/translate data into UInt8array
+    console.log("RESPONSE: ", response);
+    const bodyContainer = document.querySelector(".email-main");
+    if (bodyContainer) {
+      const createDiv = document.createElement("div");
+      for (let i = 0; i < response.length; i++) {
+        let images = document.createElement("img");
+        // const byteArray = new Uint8Array(response.images[i].data);
+        // const fileType = await fileTypeFromBuffer(byteArray)
+        // const blob = new Blob([byteArray], {type: fileType.mime}); //make a blob
+        // const blobURL = URL.createObjectURL(blob);
+        images.src = response[i];
+        console.log(response[i]);
+        images.alt = `Image ${i}`;
+        bodyContainer.appendChild(images);
+      }
+    }
+  } catch (error) {
+    console.log("Error: ", error.message);
+  }
 }
 
 //using set timeout to make code wait before running (10s)
