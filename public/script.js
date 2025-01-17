@@ -182,11 +182,6 @@ async function clickEmail(data){
   }catch(error){
     console.log("fetch response: ", error.message);
   }
-  // console.log("Image in array: ", image);
-  //     const blobURL = URL.createObjectURL(image);
-  //     const img = document.createElement("img");
-  //     img.src = blobURL; //server url to source
-  //     document.body.appendChild(img);
 }
 
 async function clickEmailReal(data){
@@ -198,25 +193,37 @@ async function clickEmailReal(data){
     <div class="body">
       <p id="body">${data.body}</p> 
     </div>
+    <div class="image-container" style="
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 20px 0;
+    "></div>
   `; //need to fix the body thing by using email instead of email preview so one post and one get
   console.log("IN REAL");
   try {
     let response = await clickEmail(data);
     let another_array = []; //need to encode/translate data into UInt8array
     console.log("RESPONSE: ", response);
-    const bodyContainer = document.querySelector(".email-main");
+    const bodyContainer = document.querySelector(".image-container");
     if (bodyContainer) {
       const createDiv = document.createElement("div");
       for (let i = 0; i < response.length; i++) {
         let images = document.createElement("img");
-        // const byteArray = new Uint8Array(response.images[i].data);
-        // const fileType = await fileTypeFromBuffer(byteArray)
-        // const blob = new Blob([byteArray], {type: fileType.mime}); //make a blob
-        // const blobURL = URL.createObjectURL(blob);
-        images.src = response[i];
-        console.log(response[i]);
+        const byteArray = Uint8Array.from(atob(response[i].base64), c => c.charCodeAt(0));
+        const blob = new Blob([byteArray], { type: response[i].type }); //make a blob
+        const blobURL = URL.createObjectURL(blob);
+        images.src = blobURL;
+        console.log(blobURL);
         images.alt = `Image ${i}`;
         bodyContainer.appendChild(images);
+        images.style.width = '50%';
+        images.onload = () => {
+          URL.revokeObjectURL(blobURL);
+        }
       }
     }
   } catch (error) {

@@ -69,9 +69,10 @@ app.post("/get-attachments", async (req, res) => {
       console.log("Cont: ", byteArray);
       const file = await fileTypeFromBuffer(byteArray);
       console.log("File: ", file);
-      const blob = new Blob([byteArray], { type: file.mime }); //make a blob
-      const blobURL = URL.createObjectURL(blob);
-      image_array.push(blobURL); //binary data
+      image_array.push({
+        base64: coded.base64FileContents,
+        type: file.mime
+      }); 
     }
     res.json({ images: image_array });
   } catch (error) {
