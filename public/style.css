@@ -125,3 +125,6 @@ body, head{
     height: 100%;
     width: auto;
 }
+.email-out{
+    overflow-y: scroll;
+}

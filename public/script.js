@@ -49,7 +49,7 @@ async function backEmails(){
   try{
     const emails = await fetch("http://localhost:5500/emails");
     const email_parse = await emails.json();
-    console.log(email_parse);
+    // console.log(email_parse);
     return email_parse.data;
   }catch (error){
     console.log("Error: ", error.message);
@@ -69,9 +69,9 @@ async function getEmails(){
       },
       body: JSON.stringify({ email: x }),
     });
-      console.log("Email Contents: ", response);
+      // console.log("Email Contents: ", response);
       let other_data = await response.json();
-      console.log("OtherData: ", other_data.data);
+      // console.log("OtherData: ", other_data.data);
       block = createsEmail(x, other_data); //we need data here ; fetch request to
       body.prepend(block); //put the email at top instead of behind
     }catch(error) {
@@ -167,7 +167,7 @@ function formatTime(dateString) {
 }
 
 async function clickEmail(data){
-  console.log("DATA: ", data);
+  // console.log("DATA: ", data);
   try{
     const response = await fetch("/get-attachments", {
     method: "POST",
@@ -177,7 +177,7 @@ async function clickEmail(data){
     body: JSON.stringify({ attachments: data.attachments }),
   });
     const response_new = await response.json();
-    console.log("NEW: ", response_new);
+    // console.log("NEW: ", response_new);
     return response_new.images;
   }catch(error){
     console.log("fetch response: ", error.message);
@@ -188,26 +188,40 @@ async function clickEmailReal(data){
   const body = document.querySelector(".email-main"); //main body
   body.innerHTML = `
     <div class="topSubject">
-      <h3 id="topSubject">${data.subject}</span>
+      <h3 id="topSubject" style="
+        text-align: center;
+      ">${data.subject}</span>
     </div>
-    <div class="body">
-      <p id="body">${data.body}</p> 
+    <div class="body" style="display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    ">
+      <p id="body" style="
+        text-align: center;
+        margin: 0;
+        padding-left: 2%;
+        padding-right: 2%;
+      ">${data.body}</p> 
     </div>
     <div class="image-container" style="
       display: flex;
       flex-direction: column;
       gap: 20px;
       align-items: center;
-      max-height: 80vh;
+      max-width: 100%;
+      max-height: 90%;
       overflow-y: auto;
       padding: 20px 0;
     "></div>
   `; //need to fix the body thing by using email instead of email preview so one post and one get
-  console.log("IN REAL");
+  // console.log("IN REAL");
   try {
     let response = await clickEmail(data);
     let another_array = []; //need to encode/translate data into UInt8array
-    console.log("RESPONSE: ", response);
+    // console.log("RESPONSE: ", response);
     const bodyContainer = document.querySelector(".image-container");
     if (bodyContainer) {
       const createDiv = document.createElement("div");
@@ -217,13 +231,15 @@ async function clickEmailReal(data){
         const blob = new Blob([byteArray], { type: response[i].type }); //make a blob
         const blobURL = URL.createObjectURL(blob);
         images.src = blobURL;
-        console.log(blobURL);
+        // console.log(blobURL);
         images.alt = `Image ${i}`;
         bodyContainer.appendChild(images);
-        images.style.width = '50%';
-        images.onload = () => {
-          URL.revokeObjectURL(blobURL);
-        }
+        images.style.width = '80%';
+        images.style.border= '2px solid black';
+        // images.onload = () => {
+        //   URL.revokeObjectURL(blobURL);
+        // }
+        // want to keep url
       }
     }
   } catch (error) {
