@@ -8,9 +8,10 @@ PersonalTemp is a simple and unlimited temporary email generator designed to giv
 2. Once account has been created/verified, copy the API_KEY from the dashboard
 3. Clone this repo and open the .env file
 4. In your .env file, paste your api key between the quotes
-5. To start your project in the terminal, use -> node server.js
-6. Go to a browser (preferably Chrome), and use this url -> http://localhost:5500
-7. Now your project has been started
+5. Also in the terminal, use -> npm install (to install all dependencies in package.json)
+6. To start your project in the terminal, use -> node server.js
+7. Go to a browser (preferably Chrome), and use this url -> http://localhost:5500
+8. Now your project has been started
 
 ## Reminders
 Due to the free nature of the mailslurp api, you will most likely need to create a new account each month to continue using this on the free trial. Additionally, this tool is only used to receive emails and not send to ensure that you are not sending private information accidentally. Furthermore, ensure that you are not receiving important emails to this email generator as all inboxes get cleared at in a day.
